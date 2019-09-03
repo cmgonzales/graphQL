@@ -21,20 +21,62 @@ const users = [{
 }]
 
 const posts = [{
-    id: '1',
+    id: '11',
     title: 'Moby dick',
-    body: 'nice',
-    published: true
+    body: 'The crazy book',
+    published: true,
+    author: '1'
+},
+{
+    id: '12',
+    title: 'Dance',
+    body: 'New york times best seller',
+    published: false,
+    author: '2'
+},
+{
+    id: '13',
+    title: 'mmie',
+    body: 'this is new things',
+    published: true,
+    author: '3'
 }]
 
+const comments = [{
+    id: '55',
+    text: 'this is the first comment',
+    author: '3',
+    post: '11'
+
+},
+{
+    id: '66',
+    text: 'this is the second comment',
+    author: '1',
+    post: '12'
+},
+{
+    id: '77',
+    text: 'this is the third comment',
+    author: '2',
+    post: '11' 
+},
+{
+    id: '66',
+    textFields: 'this is the fourth comment',
+    author: '3',
+    post:'13'
+}]
 
 //Type definitions (schema)
 const typeDefs = `
     type Query {
         me: User!
         post: Post!
+        comments:[Comment]!
         users(query: String!): [User!]!
-        
+        posts(query: String!): [Post!]
+    
     }
 
     type User{
@@ -42,6 +84,8 @@ const typeDefs = `
         name: String!
         email: String!
         age: Int
+        post: [Post!]!
+        comment: [Comment!]!
     }
 
     type Post{
@@ -49,6 +93,14 @@ const typeDefs = `
         title: String!
         body: String!
         published: Int
+        author: User!
+        comment: [Comment!]!
+    }
+    type Comment{
+        id: ID!
+        text: String!
+        author: User!
+        post: Post!
     }
 `
 
@@ -81,10 +133,65 @@ const resolvers = {
               body: 'sexy',
               published: '1990'
             }       
+        },
+        posts(parent, args, ctx, info){
+          if(!args.query){
+            return posts
+            }
+            return posts.filter((posts) => {
+                const isTitleMatch = posts.title.toLowerCase().includes(args.query.toLowerCase());
+                const isBodyMatch = posts.body.toLowerCase().includes(args.query.toLowerCase());
+
+                return isTitleMatch || isBodyMatch
+            })
+        },
+
+        comments(parent, args, ctx, info){
+            return comments;
         }
       
-    }
+    },
+        Post:{
+            author(parent, args, ctx, info){
+               return users.find((user) => {
+                   return user.id === parent.author
+               }) 
+            },
+            comment(parent,args,ctx,info){
+                return comments.filter((comment)=>{
+                    return comment.post === parent.id
+                })
+            }
+        },
+        User:{
+            post(parent,args, ctx, info){
+                return posts.filter((post) => {
+                    return post.author === parent.id
+                })
+            },
+            comment(parent, args,ctx, info){
+                return comment.filter((comment) => {
+                    return comment.author === parent.id
+                })
+            }
+        },
+        Comment:{
+            author(parent, args, ctx, info){
+                return users.find((user) => {
+                    return user.id === parent.author
+                }) 
+             },
+             post(parent,args,ctx, info){
+                 return post.find((post)=>{
+                     return post.id === parent.id
+                 })
+             }
+        }
+
+      
+    
 }
+
 
 const server = new GraphQLServer({
     typeDefs,
