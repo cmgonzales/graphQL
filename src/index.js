@@ -1,4 +1,5 @@
 import { GraphQLServer} from 'graphql-yoga'
+import { createSecureServer } from 'http2';
 
 //Scalar types - String, Boolean, Int, Float, ID
 
@@ -79,6 +80,10 @@ const typeDefs = `
     
     }
 
+    type Mutation{
+        createUser(name: String, email: String!, age: Int): User!
+    }
+
     type User{
         id: ID
         name: String!
@@ -148,9 +153,19 @@ const resolvers = {
 
         comments(parent, args, ctx, info){
             return comments;
-        }
+        },
       
     },
+
+    Mutation:{
+        createUser(parent, args,ctx,info){
+            
+            
+        }
+
+    },
+        
+
         Post:{
             author(parent, args, ctx, info){
                return users.find((user) => {
