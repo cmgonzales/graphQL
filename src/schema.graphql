@@ -83,4 +83,6 @@
         author: User!
         post: Post!
     }
-`
+type PostSubscriptionPayload{
+    
+}
