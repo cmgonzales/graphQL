@@ -1,1 +1,1 @@
-using graphql template
+graphql practice
