@@ -4,7 +4,7 @@ const Mutation = {
     createUser(parent, args, {db},info){
         const emailTaken = users.some((user) =>  user.email === args.email);
         if(emailTaken){
-            throw new Error('Email Taken.')
+            throw new Error('The email that you have entered is taken.')
         }
 
         
