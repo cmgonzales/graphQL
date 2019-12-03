@@ -13,6 +13,12 @@ let users = [{
     name: 'Lindsey',
     email: 'lindsey@example.com',
     age: '43'
+},
+{
+    id: '5',
+    name: 'marco',
+    email: 'marco@example.com',
+    age: '43'
 }]
 
 let posts = [{
