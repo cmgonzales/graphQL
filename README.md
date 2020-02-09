@@ -1,1 +1,1 @@
-graphql practice with included api
+graphql practice with local api
